@@ -30,11 +30,19 @@ h1 {
     display: flex;
     gap: 24px;
     margin-top: 24px;
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .main-content {
+        flex-direction: row;
+    }
 }
 
 /* 程式碼區域 */
-.code-section {
-    flex: 1;
+.code-section,
+.visualization-section {
+    width: 100%;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -52,15 +60,6 @@ h1 {
     overflow-x: auto;
 }
 
-/* 視覺化區域 */
-.visualization-section {
-    flex: 1;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 16px;
-}
-
 /* 控制區域 */
 .controls {
     margin: 16px 0;
@@ -72,7 +71,7 @@ h1 {
 
 .controls input {
     width: 100%;
-    min-width: 200px;
+    max-width: 400px;
     padding: 8px 16px;
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
@@ -88,14 +87,16 @@ h1 {
 
 .controls .buttons-container {
     display: flex;
-    gap: 16px;
+    gap: 8px;
     justify-content: center;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .controls button {
-    flex: 0 0 auto;
-    min-width: 100px;
+    flex: 1;
+    min-width: 80px;
+    max-width: 120px;
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -106,12 +107,17 @@ h1 {
     color: white;
     background-color: #1976d2;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .controls button:hover {
     background-color: #1565c0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.controls button:active {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .controls button:disabled {
@@ -132,22 +138,20 @@ h1 {
 
 /* 陣列視覺化 */
 .array-container {
-    margin: 24px 0;
-    padding: 16px 0;
+    width: 100%;
+    overflow-x: auto;
 }
 
 .array-table {
-    margin: 0 auto;
-    border-collapse: separate;
-    border-spacing: 8px;
+    min-width: 100%;
 }
 
 .number-box {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border: 2px solid rgba(0, 0, 0, 0.12);
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     transition: all 0.3s;
 }
@@ -187,14 +191,23 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .result-item {
-    padding: 4px 12px;
+    padding: 4px 8px;
     background-color: #e3f2fd;
     border-radius: 16px;
-    font-size: 14px;
+    font-size: 12px;
     color: rgba(0, 0, 0, 0.87);
+}
+
+@media (min-width: 768px) {
+    .result-item {
+        padding: 4px 12px;
+        font-size: 14px;
+    }
 }
 
 /* 指針標籤 */
@@ -276,4 +289,42 @@ h1 {
 
 #right-pointer {
     color: #9c27b0;
+}
+
+@media (max-width: 480px) {
+    .number-box {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .python-code {
+        font-size: 12px;
+        padding: 12px;
+    }
+
+    .controls button {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+
+    .controls input {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .explanation {
+        padding: 12px;
+        font-size: 14px;
+    }
 } 
