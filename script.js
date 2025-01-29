@@ -21,6 +21,7 @@ class ThreeSumVisualizer {
 
     initializeEventListeners() {
         document.getElementById('start').addEventListener('click', () => this.start());
+        document.getElementById('prev').addEventListener('click', () => this.prevStep());
         document.getElementById('next').addEventListener('click', () => this.nextStep());
         document.getElementById('reset').addEventListener('click', () => this.reset());
     }
@@ -243,11 +244,50 @@ class ThreeSumVisualizer {
         this.currentStep++;
     }
 
+    prevStep() {
+        if (this.currentStep <= 1) {
+            alert('已經是第一步了！');
+            return;
+        }
+
+        // 只回退一步
+        this.currentStep--;
+        const step = this.steps[this.currentStep - 1];
+        
+        // 更新說明文字
+        this.currentStepElement.textContent = step.message;
+        
+        // 清除所有高亮
+        document.querySelectorAll('.line').forEach(line => {
+            line.classList.remove('highlight');
+        });
+        
+        // 高亮當前執行的程式碼行
+        if (step.line) {
+            document.querySelector(`.line[data-line="${step.line}"]`).classList.add('highlight');
+        }
+
+        // 如果當前步驟是找到結果，需要移除最後一個結果
+        if (this.steps[this.currentStep].type === 'found') {
+            const lastResult = this.resultList.lastElementChild;
+            if (lastResult) {
+                this.resultList.removeChild(lastResult);
+            }
+        }
+
+        // 更新指針位置
+        this.updatePointers(step.i, step.left, step.right);
+    }
+
     reset() {
         this.currentStep = 0;
         this.currentStepElement.textContent = '請點擊"開始演算"開始';
         this.resultList.innerHTML = '';
         this.updatePointers();
+        // 清除所有高亮
+        document.querySelectorAll('.line').forEach(line => {
+            line.classList.remove('highlight');
+        });
     }
 }
 

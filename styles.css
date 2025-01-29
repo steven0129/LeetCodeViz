@@ -21,7 +21,7 @@
 }
 
 .python-code {
-    font-family: 'Consolas', monospace;
+    font-family: 'Consolas', 'Monaco', monospace;
     white-space: pre;
     font-size: 14px;
     line-height: 0;
@@ -45,6 +45,33 @@
 .controls button {
     padding: 5px 15px;
     margin-right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.controls button:hover {
+    background-color: #45a049;
+}
+
+.controls button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#prev, #next {
+    min-width: 80px;
+}
+
+#reset {
+    background-color: #f44336;
+}
+
+#reset:hover {
+    background-color: #da190b;
 }
 
 .array-container {
@@ -165,4 +192,26 @@ td {
 .line.highlight {
     background-color: #fff3cd;
     border-radius: 2px;
+}
+
+/* Python 語法高亮 */
+.python-code .keyword {
+    color: #0033B3;  /* 關鍵字使用藍色 */
+    font-weight: bold;
+}
+
+.python-code .function {
+    color: #7A7A43;  /* 函數名稱使用暗黃色 */
+}
+
+.python-code .class-name {
+    color: #008B8B;  /* 類別名稱使用青色 */
+}
+
+.python-code .self {
+    color: #8B008B;  /* self 參數使用紫色 */
+}
+
+.python-code .type {
+    color: #009688;  /* 型別註解使用綠色 */
 } 

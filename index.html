@@ -12,32 +12,33 @@
         <div class="main-content">
             <div class="code-section">
                 <pre class="python-code">
-                  <code class="line" data-line="1">class Solution:</code>
-                  <code class="line" data-line="2">    def threeSum(self, nums: List[int]) -> List[List[int]]:</code>
+                  <code class="line" data-line="1"><span class="keyword">class</span> <span class="class-name">Solution</span>:</code>
+                  <code class="line" data-line="2">    <span class="keyword">def</span> <span class="function">threeSum</span>(<span class="self">self</span>, nums: <span class="type">List[int]</span>) -> <span class="type">List[List[int]]</span>:</code>
                   <code class="line" data-line="3">        result = []</code>
                   <code class="line" data-line="4">        nums.sort()</code>
-                  <code class="line" data-line="6">        for idx, a in enumerate(nums):</code>
-                  <code class="line" data-line="7">            if idx > 0 and a == nums[idx - 1]:</code>
-                  <code class="line" data-line="8">                continue</code>
-                  <code class="line" data-line="10">            left, right = idx + 1, len(nums) - 1</code>
-                  <code class="line" data-line="11">            while left < right:</code>
+                  <code class="line" data-line="6">        <span class="keyword">for</span> idx, a <span class="keyword">in</span> <span class="function">enumerate</span>(nums):</code>
+                  <code class="line" data-line="7">            <span class="keyword">if</span> idx > 0 <span class="keyword">and</span> a == nums[idx - 1]:</code>
+                  <code class="line" data-line="8">                <span class="keyword">continue</span></code>
+                  <code class="line" data-line="10">            left, right = idx + 1, <span class="function">len</span>(nums) - 1</code>
+                  <code class="line" data-line="11">            <span class="keyword">while</span> left < right:</code>
                   <code class="line" data-line="12">                threeSum = a + nums[left] + nums[right]</code>
-                  <code class="line" data-line="14">                if threeSum > 0:</code>
+                  <code class="line" data-line="14">                <span class="keyword">if</span> threeSum > 0:</code>
                   <code class="line" data-line="15">                    right -= 1</code>
-                  <code class="line" data-line="16">                elif threeSum < 0:</code>
+                  <code class="line" data-line="16">                <span class="keyword">elif</span> threeSum < 0:</code>
                   <code class="line" data-line="17">                    left += 1</code>
-                  <code class="line" data-line="18">                else:</code>
+                  <code class="line" data-line="18">                <span class="keyword">else</span>:</code>
                   <code class="line" data-line="19">                    result.append([a, nums[left], nums[right]])</code>
                   <code class="line" data-line="20">                    left += 1</code>
-                  <code class="line" data-line="22">                    while nums[left] == nums[left - 1] and left < right:</code>
+                  <code class="line" data-line="22">                    <span class="keyword">while</span> nums[left] == nums[left - 1] <span class="keyword">and</span> left < right:</code>
                   <code class="line" data-line="23">                        left += 1</code>
-                  <code class="line" data-line="25">        return result</code>
+                  <code class="line" data-line="25">        <span class="keyword">return</span> result</code>
                 </pre>
             </div>
             <div class="visualization-section">
                 <div class="controls">
                     <input type="text" id="input" placeholder="輸入數字，用逗號分隔" value="-1,0,1,2,-1,-4">
                     <button id="start">開始演算</button>
+                    <button id="prev">上一步</button>
                     <button id="next">下一步</button>
                     <button id="reset">重置</button>
                 </div>
