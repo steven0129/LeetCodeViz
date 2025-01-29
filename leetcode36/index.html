@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>數獨驗證器 - Leetcode 36</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .code-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .code-section pre {
+            margin: 0;
+            border-radius: 4px;
+            background: #f5f5f5;
+        }
+        .visualization-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sudoku-board {
+            border: 2px solid #333;
+            display: grid;
+            grid-template-columns: repeat(9, 40px);
+            gap: 1px;
+            background-color: #333;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            background: transparent;
+            color: #333;
+        }
+        .cell.highlight {
+            background-color: #fff3e0;
+        }
+        .cell.current {
+            background-color: #26a69a;
+        }
+        .cell.current input {
+            color: white;
+        }
+        .thick-border-right {
+            border-right: 2px solid #333;
+        }
+        .thick-border-bottom {
+            border-bottom: 2px solid #333;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-floating {
+            margin: 0 5px;
+        }
+        #status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        .sets-visualization {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .set-container {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .set-title {
+            color: #26a69a;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .set-content {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 20px;
+            color: #333;
+        }
+        /* 修改 Materialize 按鈕顏色 */
+        .btn {
+            background-color: #26a69a;
+        }
+        .btn:hover {
+            background-color: #2bbbad;
+        }
+        /* 適配手機版面 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sets-visualization {
+                flex-direction: column;
+            }
+            .set-container {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <span class="brand-logo">數獨驗證器</span>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="code-section">
+            <pre><code class="language-python">class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        squares = [set() for _ in range(9)]
+
+        for r in range(9):
+            for c in range(9):
+                if board[r][c] == '.':
+                    continue
+                
+                if (board[r][c] in rows[r] or 
+                    board[r][c] in cols[c] or 
+                    board[r][c] in squares[(r // 3) * 3 + (c // 3)]):
+                    return False
+
+                rows[r].add(board[r][c])
+                cols[c].add(board[r][c])
+                squares[(r // 3) * 3 + (c // 3)].add(board[r][c])
+
+        return True</code></pre>
+        </div>
+        <div class="visualization-section">
+            <div class="controls">
+                <button class="btn waves-effect waves-light" onclick="previousStep()">
+                    <i class="material-icons left">arrow_back</i>上一步
+                </button>
+                <button class="btn waves-effect waves-light" onclick="nextStep()">
+                    <i class="material-icons right">arrow_forward</i>下一步
+                </button>
+                <button class="btn waves-effect waves-light red lighten-1" onclick="resetVisualization()">
+                    <i class="material-icons left">refresh</i>重置
+                </button>
+            </div>
+            <div class="sudoku-board z-depth-1" id="board"></div>
+            <div id="status" class="z-depth-1"></div>
+            <div class="sets-visualization">
+                <div class="set-container">
+                    <div class="set-title">目前行的數字集合</div>
+                    <div class="set-content" id="row-set"></div>
+                </div>
+                <div class="set-container">
+                    <div class="set-title">目前列的數字集合</div>
+                    <div class="set-content" id="col-set"></div>
+                </div>
+                <div class="set-container">
+                    <div class="set-title">目前九宮格的數字集合</div>
+                    <div class="set-content" id="square-set"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <script>
+        const defaultBoard = [
+            ["5","3",".",".","7",".",".",".","."],
+            ["6",".",".","1","9","5",".",".","."],
+            [".","9","8",".",".",".",".","6","."],
+            ["8",".",".",".","6",".",".",".","3"],
+            ["4",".",".","8",".","3",".",".","1"],
+            ["7",".",".",".","2",".",".",".","6"],
+            [".","6",".",".",".",".","2","8","."],
+            [".",".",".","4","1","9",".",".","5"],
+            [".",".",".",".","8",".",".","7","9"]
+        ];
+
+        let currentRow = 0;
+        let currentCol = 0;
+        let rows = Array.from({ length: 9 }, () => new Set());
+        let cols = Array.from({ length: 9 }, () => new Set());
+        let squares = Array.from({ length: 9 }, () => new Set());
+        let isRunning = false;
+
+        // 添加操作歷史記錄
+        let history = [];
+        
+        // 記錄當前狀態
+        function saveState() {
+            history.push({
+                row: currentRow,
+                col: currentCol,
+                rows: rows.map(set => new Set(set)),
+                cols: cols.map(set => new Set(set)),
+                squares: squares.map(set => new Set(set)),
+                status: document.getElementById('status').textContent
+            });
+        }
+
+        // 恢復到上一個狀態
+        function previousStep() {
+            if (history.length === 0) return;
+            
+            const previousState = history.pop();
+            currentRow = previousState.row;
+            currentCol = previousState.col;
+            rows = previousState.rows;
+            cols = previousState.cols;
+            squares = previousState.squares;
+            
+            highlightCurrentCell();
+            updateSets();
+            document.getElementById('status').textContent = previousState.status;
+            
+            isRunning = true;
+        }
+
+        function createBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (j === 2 || j === 5) cell.className += ' thick-border-right';
+                    if (i === 2 || i === 5) cell.className += ' thick-border-bottom';
+                    
+                    // 創建輸入框
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.value = defaultBoard[i][j] === '.' ? '' : defaultBoard[i][j];
+                    input.style.width = '100%';
+                    input.style.height = '100%';
+                    input.style.border = 'none';
+                    input.style.textAlign = 'center';
+                    input.style.fontSize = '16px';
+                    input.style.backgroundColor = 'transparent';
+                    
+                    // 添加輸入驗證
+                    input.addEventListener('input', function(e) {
+                        const value = e.target.value;
+                        // 只允許輸入1-9的數字
+                        if (value && !/^[1-9]$/.test(value)) {
+                            e.target.value = '';
+                        }
+                        // 更新 defaultBoard
+                        defaultBoard[i][j] = value || '.';
+                        // 重置驗證狀態
+                        resetVisualization();
+                    });
+
+                    cell.id = `cell-${i}-${j}`;
+                    cell.appendChild(input);
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function highlightCurrentCell() {
+            // 清除之前的高亮
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('current');
+                cell.classList.remove('highlight');
+                cell.querySelector('input').style.color = 'black';
+            });
+
+            // 高亮當前格子
+            const currentCell = document.getElementById(`cell-${currentRow}-${currentCol}`);
+            if (currentCell) {
+                currentCell.classList.add('current');
+                currentCell.querySelector('input').style.color = 'white';
+            }
+
+            // 高亮相關的行、列和九宮格
+            for (let i = 0; i < 9; i++) {
+                document.getElementById(`cell-${currentRow}-${i}`).classList.add('highlight');
+                document.getElementById(`cell-${i}-${currentCol}`).classList.add('highlight');
+            }
+
+            const startRow = Math.floor(currentRow / 3) * 3;
+            const startCol = Math.floor(currentCol / 3) * 3;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    document.getElementById(`cell-${startRow + i}-${startCol + j}`).classList.add('highlight');
+                }
+            }
+        }
+
+        function updateSets() {
+            document.getElementById('row-set').textContent = 
+                Array.from(rows[currentRow]).join(', ') || '空';
+            document.getElementById('col-set').textContent = 
+                Array.from(cols[currentCol]).join(', ') || '空';
+            const squareIndex = Math.floor(currentRow / 3) * 3 + Math.floor(currentCol / 3);
+            document.getElementById('square-set').textContent = 
+                Array.from(squares[squareIndex]).join(', ') || '空';
+        }
+
+        function getCodeLineNumber() {
+            if (!isRunning) return 0;
+            
+            const currentValue = defaultBoard[currentRow][currentCol];
+            
+            // 初始化階段
+            if (currentRow === 0 && currentCol === 0) {
+                if (!rows[0].size && !cols[0].size && !squares[0].size) {
+                    return 3; // 初始化 rows
+                }
+                if (!cols[0].size && !squares[0].size) {
+                    return 4; // 初始化 cols
+                }
+                return 5; // 初始化 squares
+            }
+            
+            // 主要循環
+            if (currentValue === '.') {
+                return 8; // continue 的行
+            }
+            
+            // 檢查階段
+            const squareIndex = Math.floor(currentRow / 3) * 3 + Math.floor(currentCol / 3);
+            if (!rows[currentRow].has(currentValue) && 
+                !cols[currentCol].has(currentValue) && 
+                !squares[squareIndex].has(currentValue)) {
+                
+                // 添加數字到集合的階段
+                if (!rows[currentRow].has(currentValue)) {
+                    return 15; // 添加到 rows
+                }
+                if (!cols[currentCol].has(currentValue)) {
+                    return 16; // 添加到 cols
+                }
+                return 17; // 添加到 squares
+            }
+            
+            // 檢查重複
+            if (rows[currentRow].has(currentValue)) {
+                return 11; // 檢查 rows
+            }
+            if (cols[currentCol].has(currentValue)) {
+                return 12; // 檢查 cols
+            }
+            return 13; // 檢查 squares
+        }
+
+        function getStatusMessage(lineNumber, currentValue) {
+            const messages = {
+                3: '初始化行的集合',
+                4: '初始化列的集合',
+                5: '初始化九宮格的集合',
+                8: `檢查位置 (${currentRow}, ${currentCol}): 空格，跳過`,
+                11: `檢查位置 (${currentRow}, ${currentCol}): 數字 ${currentValue} 在同一行重複！`,
+                12: `檢查位置 (${currentRow}, ${currentCol}): 數字 ${currentValue} 在同一列重複！`,
+                13: `檢查位置 (${currentRow}, ${currentCol}): 數字 ${currentValue} 在同一九宮格重複！`,
+                15: `將數字 ${currentValue} 加入到第 ${currentRow} 行的集合`,
+                16: `將數字 ${currentValue} 加入到第 ${currentCol} 列的集合`,
+                17: `將數字 ${currentValue} 加入到對應的九宮格集合`
+            };
+            return messages[lineNumber] || '';
+        }
+
+        function nextStep() {
+            if (!isRunning) {
+                isRunning = true;
+            }
+
+            // 保存當前狀態
+            saveState();
+
+            const currentValue = defaultBoard[currentRow][currentCol];
+            highlightCurrentCell();
+            
+            const lineNumber = getCodeLineNumber();
+            document.getElementById('status').textContent = getStatusMessage(lineNumber, currentValue);
+
+            // 如果是檢查到重複，就停止執行
+            if (lineNumber >= 11 && lineNumber <= 13 && currentValue !== '.') {
+                const squareIndex = Math.floor(currentRow / 3) * 3 + Math.floor(currentCol / 3);
+                if (rows[currentRow].has(currentValue) || 
+                    cols[currentCol].has(currentValue) || 
+                    squares[squareIndex].has(currentValue)) {
+                    isRunning = false;
+                    return;
+                }
+            }
+
+            // 如果不是空格且沒有重複，就添加到集合中
+            if (currentValue !== '.' && (lineNumber >= 15 || (currentRow === 0 && currentCol === 0))) {
+                rows[currentRow].add(currentValue);
+                cols[currentCol].add(currentValue);
+                squares[Math.floor(currentRow / 3) * 3 + Math.floor(currentCol / 3)].add(currentValue);
+            }
+
+            updateSets();
+
+            // 移動到下一個位置
+            currentCol++;
+            if (currentCol === 9) {
+                currentCol = 0;
+                currentRow++;
+                if (currentRow === 9) {
+                    document.getElementById('status').textContent = '驗證完成：數獨有效！';
+                    isRunning = false;
+                    return;
+                }
+            }
+        }
+
+        function resetVisualization() {
+            currentRow = 0;
+            currentCol = 0;
+            rows = Array.from({ length: 9 }, () => new Set());
+            cols = Array.from({ length: 9 }, () => new Set());
+            squares = Array.from({ length: 9 }, () => new Set());
+            history = [];
+            isRunning = true;
+            
+            document.getElementById('status').textContent = '';
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('current');
+                cell.classList.remove('highlight');
+                cell.querySelector('input').style.color = 'black';
+            });
+            document.getElementById('row-set').textContent = '空';
+            document.getElementById('col-set').textContent = '空';
+            document.getElementById('square-set').textContent = '空';
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createBoard();
+            isRunning = true; // 頁面載入後直接可以開始
+        });
+    </script>
+</body>
+</html> 
