@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Sum 演算法視覺化</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Three Sum 演算法視覺化</h1>
+        <div class="main-content">
+            <div class="code-section">
+                <pre class="python-code">
+                  <code class="line" data-line="1">class Solution:</code>
+                  <code class="line" data-line="2">    def threeSum(self, nums: List[int]) -> List[List[int]]:</code>
+                  <code class="line" data-line="3">        result = []</code>
+                  <code class="line" data-line="4">        nums.sort()</code>
+                  <code class="line" data-line="6">        for idx, a in enumerate(nums):</code>
+                  <code class="line" data-line="7">            if idx > 0 and a == nums[idx - 1]:</code>
+                  <code class="line" data-line="8">                continue</code>
+                  <code class="line" data-line="10">            left, right = idx + 1, len(nums) - 1</code>
+                  <code class="line" data-line="11">            while left < right:</code>
+                  <code class="line" data-line="12">                threeSum = a + nums[left] + nums[right]</code>
+                  <code class="line" data-line="14">                if threeSum > 0:</code>
+                  <code class="line" data-line="15">                    right -= 1</code>
+                  <code class="line" data-line="16">                elif threeSum < 0:</code>
+                  <code class="line" data-line="17">                    left += 1</code>
+                  <code class="line" data-line="18">                else:</code>
+                  <code class="line" data-line="19">                    result.append([a, nums[left], nums[right]])</code>
+                  <code class="line" data-line="20">                    left += 1</code>
+                  <code class="line" data-line="22">                    while nums[left] == nums[left - 1] and left < right:</code>
+                  <code class="line" data-line="23">                        left += 1</code>
+                  <code class="line" data-line="25">        return result</code>
+                </pre>
+            </div>
+            <div class="visualization-section">
+                <div class="controls">
+                    <input type="text" id="input" placeholder="輸入數字，用逗號分隔" value="-1,0,1,2,-1,-4">
+                    <button id="start">開始演算</button>
+                    <button id="next">下一步</button>
+                    <button id="reset">重置</button>
+                </div>
+                <div class="visualization">
+                    <div class="array-container">
+                        <table class="array-table">
+                            <tr class="pointers-row">
+                                <td id="i-pointer">i</td>
+                                <td id="left-pointer">left</td>
+                                <td id="right-pointer">right</td>
+                            </tr>
+                            <tr class="numbers-row">
+                                <td class="number-box"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="explanation">
+                        <p id="current-step"></p>
+                    </div>
+                    <div class="results">
+                        <h3>找到的組合：</h3>
+                        <div id="result-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
