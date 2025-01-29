@@ -1,90 +1,253 @@
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+/* 全局樣式 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+    margin-bottom: 24px;
+}
+
+/* 主要內容區域 */
 .main-content {
     display: flex;
-    gap: 20px;
-    margin-top: 20px;
+    gap: 24px;
+    margin-top: 24px;
 }
 
+/* 程式碼區域 */
 .code-section {
     flex: 1;
-    padding: 15px;
-    border-radius: 5px;
-}
-
-.visualization-section {
-    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
 }
 
 .python-code {
-    font-family: 'Consolas', 'Monaco', monospace;
-    white-space: pre;
+    font-family: 'Roboto Mono', monospace;
     font-size: 14px;
-    line-height: 0;
+    line-height: 1.2;
+    background-color: #fafafa;
+    border-radius: 4px;
+    padding: 16px;
+    white-space: pre;
     overflow-x: auto;
-    counter-reset: line;
-    padding: 15px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
 }
 
+/* 視覺化區域 */
+.visualization-section {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
+}
+
+/* 控制區域 */
 .controls {
-    margin: 20px 0;
+    margin: 16px 0;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-direction: column;
 }
 
 .controls input {
-    padding: 5px;
-    width: 300px;
-    margin-right: 10px;
+    width: 100%;
+    min-width: 200px;
+    padding: 8px 16px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    transition: border-bottom-color 0.3s;
+}
+
+.controls input:focus {
+    outline: none;
+    border-bottom: 2px solid #1976d2;
+}
+
+.controls .buttons-container {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
 }
 
 .controls button {
-    padding: 5px 15px;
-    margin-right: 10px;
-    background-color: #4CAF50;
-    color: white;
+    flex: 0 0 auto;
+    min-width: 100px;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: white;
+    background-color: #1976d2;
     cursor: pointer;
     transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .controls button:hover {
-    background-color: #45a049;
+    background-color: #1565c0;
 }
 
 .controls button:disabled {
-    background-color: #cccccc;
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+    box-shadow: none;
     cursor: not-allowed;
 }
 
-#prev, #next {
-    min-width: 80px;
-}
-
+/* 重置按鈕樣式 */
 #reset {
     background-color: #f44336;
 }
 
 #reset:hover {
-    background-color: #da190b;
+    background-color: #d32f2f;
 }
 
+/* 陣列視覺化 */
 .array-container {
-    position: relative;
-    margin: 50px 0;
-    padding: 20px 0;
+    margin: 24px 0;
+    padding: 16px 0;
 }
 
 .array-table {
     margin: 0 auto;
     border-collapse: separate;
-    border-spacing: 10px 5px;
-    overflow: visible;
+    border-spacing: 8px;
+}
+
+.number-box {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.number-box.highlighted {
+    background-color: #bbdefb;
+    border-color: #1976d2;
+}
+
+.number-box.selected {
+    background-color: #1976d2;
+    border-color: #1565c0;
+    color: white;
+}
+
+/* 說明文字區域 */
+.explanation {
+    margin: 16px 0;
+    padding: 16px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+/* 結果區域 */
+.results {
+    margin-top: 24px;
+}
+
+.results h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+#result-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.result-item {
+    padding: 4px 12px;
+    background-color: #e3f2fd;
+    border-radius: 16px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+/* 指針標籤 */
+.pointer-label {
+    font-weight: 500;
+    color: #1976d2;
+}
+
+/* 程式碼行號和高亮 */
+.line {
+    padding-left: 3em;
+    position: relative;
+    line-height: 1.2;
+    display: block;
+    margin: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.line:before {
+    position: absolute;
+    left: 0;
+    color: rgba(0, 0, 0, 0.38);
+    padding-right: 1em;
+    content: attr(data-line);
+}
+
+.line.highlight {
+    background-color: #fff3e0;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+}
+
+/* Python 語法高亮 */
+.python-code .keyword {
+    color: #1976d2;
+    font-weight: 500;
+}
+
+.python-code .function {
+    color: #0097a7;
+}
+
+.python-code .class-name {
+    color: #00838f;
+}
+
+.python-code .self {
+    color: #7b1fa2;
+}
+
+.python-code .type {
+    color: #00695c;
 }
 
 .pointers-row {
@@ -93,24 +256,6 @@
 
 .numbers-row {
     height: 50px;
-}
-
-.number-box {
-    width: 40px;
-    height: 40px;
-    border: 2px solid #333;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.number-box.highlighted {
-    background-color: #ffeb3b;
-}
-
-.number-box.selected {
-    background-color: #4caf50;
-    color: white;
 }
 
 .pointers-row td {
@@ -131,87 +276,4 @@
 
 #right-pointer {
     color: #9c27b0;
-}
-
-.explanation {
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-}
-
-.results {
-    margin-top: 20px;
-}
-
-#result-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.result-item {
-    background-color: #e0e0e0;
-    padding: 5px 10px;
-    border-radius: 3px;
-}
-
-.pointer-label {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    bottom: 0;
-}
-
-td {
-    position: relative;
-}
-
-.line {
-    display: block;
-    position: relative;
-    padding-left: 3.5em;
-    line-height: 0.9;
-    margin: 0;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-
-.line:before {
-    position: absolute;
-    left: 0;
-    width: 3em;
-    text-align: right;
-    color: #888;
-    padding-right: 0.3em;
-    content: attr(data-line);
-}
-
-.line.highlight {
-    background-color: #fff3cd;
-    border-radius: 2px;
-}
-
-/* Python 語法高亮 */
-.python-code .keyword {
-    color: #0033B3;  /* 關鍵字使用藍色 */
-    font-weight: bold;
-}
-
-.python-code .function {
-    color: #7A7A43;  /* 函數名稱使用暗黃色 */
-}
-
-.python-code .class-name {
-    color: #008B8B;  /* 類別名稱使用青色 */
-}
-
-.python-code .self {
-    color: #8B008B;  /* self 參數使用紫色 */
-}
-
-.python-code .type {
-    color: #009688;  /* 型別註解使用綠色 */
 } 
