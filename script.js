@@ -7,6 +7,8 @@ class ThreeSumVisualizer {
         
         this.initializeElements();
         this.initializeEventListeners();
+        // 初始化時直接開始演算
+        this.start();
     }
 
     initializeElements() {
@@ -20,10 +22,16 @@ class ThreeSumVisualizer {
     }
 
     initializeEventListeners() {
-        document.getElementById('start').addEventListener('click', () => this.start());
+        // 移除開始按鈕的事件監聽
         document.getElementById('prev').addEventListener('click', () => this.prevStep());
         document.getElementById('next').addEventListener('click', () => this.nextStep());
         document.getElementById('reset').addEventListener('click', () => this.reset());
+        
+        // 監聽輸入框的變化
+        this.input.addEventListener('change', () => {
+            this.reset();
+            this.start();
+        });
     }
 
     start() {
@@ -35,7 +43,6 @@ class ThreeSumVisualizer {
         this.nums = input;
         this.nums.sort((a, b) => a - b);
         this.generateSteps();
-        this.reset();
         this.renderArray();
     }
 
