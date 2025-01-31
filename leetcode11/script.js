@@ -14,7 +14,8 @@ class ContainerVisualizer {
             CALC_AREA: [8],
             UPDATE_MAX: [9],
             CHECK_OPTIMIZE: [11, 12],
-            MOVE_POINTER: [14, 15, 16, 17]
+            MOVE_POINTER: [14, 15, 16, 17],
+            RETURN: [20]
         };
         this.currentHighlight = [];
 
@@ -150,6 +151,16 @@ class ContainerVisualizer {
                     : `右指針向左移動: ${oldRight} → ${right}`
             });
         }
+
+        // 新增 return 步驟
+        this.steps.push({
+            left,
+            right,
+            currentArea: maxArea,
+            maxArea,
+            phase: 'RETURN',
+            description: `演算法結束，返回最大面積: ${maxArea}`
+        });
     }
 
     prevStep() {
@@ -163,6 +174,13 @@ class ContainerVisualizer {
         if (this.currentStep < this.steps.length - 1) {
             this.currentStep++;
             this.applyStep();
+            
+            // 當到達最後一步時，顯示完成訊息
+            if (this.currentStep === this.steps.length - 1) {
+                document.getElementById('stepDescription').innerHTML = 
+                    `<strong style="color: #1a73e8">演算法執行完成！</strong><br>` +
+                    this.steps[this.currentStep].description;
+            }
         }
     }
 
