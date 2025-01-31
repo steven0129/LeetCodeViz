@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode 42 - Trapping Rain Water</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --primary-variant: #3700b3;
+            --secondary-color: #03dac6;
+            --background: #ffffff;
+            --surface: #ffffff;
+            --error: #b00020;
+            --on-primary: #ffffff;
+            --on-secondary: #000000;
+            --on-background: #000000;
+            --on-surface: #000000;
+            --on-error: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: #f5f5f5;
+            color: var(--on-background);
+        }
+
+        .container-wrapper {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;  /* 允許在小螢幕上換行 */
+        }
+
+        .code-section {
+            flex: 1;
+            min-width: 300px;  /* 減少最小寬度 */
+            width: 100%;      /* 在小螢幕上佔滿寬度 */
+        }
+
+        .animation-section {
+            flex: 1;
+            min-width: 300px;  /* 減少最小寬度 */
+            width: 100%;      /* 在小螢幕上佔滿寬度 */
+        }
+
+        .code-card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        pre {
+            margin: 0;
+            padding: 8px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            line-height: 1.2;
+            overflow-x: auto;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 
+                       0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin: 0 0 24px 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            margin: 24px 0;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;  /* 改回 hidden */
+        }
+
+        .bar {
+            position: absolute;
+            bottom: 0;
+            background-color: var(--primary-color);
+            width: 100%;  /* 使用百分比寬度 */
+            transition: height 0.5s ease;
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            background-color: var(--secondary-color);
+            opacity: 0;
+            width: 100%;  /* 使用百分比寬度 */
+            transition: all 0.5s ease;
+        }
+
+        .pointer {
+            position: absolute;
+            bottom: -30px;
+            width: 100%;
+            text-align: center;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .pointer.active {
+            opacity: 1;
+        }
+
+        .pointer.left {
+            color: #f44336;
+        }
+
+        .pointer.right {
+            color: #2196f3;
+        }
+
+        .pointer-line {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            background-color: currentColor;
+            height: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .pointer.active .pointer-line {
+            height: 400px;
+            opacity: 0.3;
+        }
+
+        #controls {
+            display: flex;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .mdc-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            min-width: 64px;
+            height: 36px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: var(--on-primary);
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.25px;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),
+                       0 2px 2px 0 rgba(0,0,0,0.14),
+                       0 1px 5px 0 rgba(0,0,0,0.12);
+        }
+
+        .mdc-button:hover {
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2),
+                       0 4px 5px 0 rgba(0,0,0,0.14),
+                       0 1px 10px 0 rgba(0,0,0,0.12);
+        }
+
+        .mdc-button:active {
+            box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2),
+                       0 8px 10px 1px rgba(0,0,0,0.14),
+                       0 3px 14px 2px rgba(0,0,0,0.12);
+        }
+
+        #explanation {
+            background-color: var(--surface);
+            padding: 16px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--on-surface);
+        }
+
+        .code-line {
+            display: block;
+            position: relative;
+            padding: 2px 0;
+            margin: 0;
+            transition: background-color 0.3s ease;
+            white-space: pre;
+            line-height: 0.5;
+            font-size: 14px;
+        }
+
+        .code-line.highlight {
+            background-color: rgba(98, 0, 238, 0.1);
+            border-left: 3px solid var(--primary-color);
+            padding-left: 2px;
+        }
+
+        .line-number {
+            display: inline-block;
+            width: 24px;
+            margin-right: 8px;
+            color: #999;
+            user-select: none;
+            text-align: right;
+            font-size: 14px;
+        }
+
+        code.language-python {
+            white-space: pre;
+            tab-size: 4;
+            display: block;
+            line-height: 0.5;
+            padding: 4px;
+            margin: 0;
+        }
+
+        .bar-height, .bar-label, .pointer {
+            width: 100%;
+            font-size: min(12px, 2vw);  /* 響應式字體大小 */
+        }
+
+        .bar-height {
+            position: absolute;
+            width: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            top: -20px;  /* 位於柱子上方 */
+        }
+
+        .visualization-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 0 20px;
+        }
+
+        /* 媒體查詢 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .container-wrapper {
+                gap: 12px;
+            }
+
+            .code-card, .card {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .mdc-button {
+                padding: 0 12px;
+                min-width: 48px;
+                height: 32px;
+                font-size: 12px;
+            }
+
+            #controls {
+                gap: 8px;
+            }
+
+            .bar-height, .bar-label {
+                font-size: 10px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .code-card, .card {
+                padding: 12px;
+            }
+
+            pre {
+                font-size: 12px;
+            }
+
+            #explanation {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>LeetCode 42 - Trapping Rain Water</h1>
+    
+    <div class="container-wrapper">
+        <!-- 左側程式碼區域 -->
+        <div class="code-section">
+            <div class="code-card">
+                <h2>Python Solution</h2>
+                <pre><code class="language-python">class Solution:
+    def trap(self, height: List[int]) -> int:
+        if not height:
+            return 0
+
+        left, right = 0, len(height) - 1
+        leftMax, rightMax = height[left], height[right]
+        result = 0
+
+        while left < right:
+            if leftMax < rightMax:
+                left += 1
+                leftMax = max(leftMax, height[left])
+                result += leftMax - height[left]
+            else:
+                right -= 1
+                rightMax = max(rightMax, height[right])
+                result += rightMax - height[right]
+
+        return result</code></pre>
+            </div>
+            <div class="code-card">
+                <h2>演算法說明</h2>
+                <p>此演算法使用雙指針技巧來解決接雨水問題：</p>
+                <ul>
+                    <li>使用左右兩個指針從兩端向中間移動</li>
+                    <li>記錄左右兩側的最大高度</li>
+                    <li>較小的一側可以確定積水量，因此優先移動該側的指針</li>
+                    <li>每次移動後更新該側的最大高度並計算積水量</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 右側動畫區域 -->
+        <div class="animation-section">
+            <div class="card">
+                <h2>輸入數據</h2>
+                <div style="margin-bottom: 16px;">
+                    <label for="input-array">請輸入非負整數陣列（用逗號分隔）：</label>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <input 
+                            type="text" 
+                            id="input-array" 
+                            value="0,1,0,2,1,0,1,3,2,1,2,1"
+                            style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                        >
+                        <button 
+                            class="mdc-button" 
+                            onclick="updateArray()"
+                            style="white-space: nowrap;"
+                        >
+                            更新數據
+                        </button>
+                    </div>
+                    <div id="error-message" style="color: #b00020; margin-top: 4px; font-size: 12px;"></div>
+                </div>
+                <div id="container"></div>
+                <div id="controls">
+                    <button class="mdc-button" onclick="prev()">
+                        <span class="material-icons">arrow_back</span>
+                        上一步
+                    </button>
+                    <button class="mdc-button" onclick="next()">
+                        <span class="material-icons">arrow_forward</span>
+                        下一步
+                    </button>
+                    <button class="mdc-button" onclick="reset()">
+                        <span class="material-icons">refresh</span>
+                        重置
+                    </button>
+                </div>
+                <div id="explanation"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    
+    <script>
+        const height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        let steps = [{
+            left: 0,
+            right: height.length - 1,
+            leftMax: height[0],
+            rightMax: height[height.length - 1],
+            result: 0
+        }];
+        let currentStep = 0;
+        let left = steps[0].left;
+        let right = steps[0].right;
+        let leftMax = steps[0].leftMax;
+        let rightMax = steps[0].rightMax;
+        let result = steps[0].result;
+        let waterLevels = new Array(height.length).fill(0);
+
+        function createBars() {
+            const container = document.getElementById('container');
+            container.innerHTML = '<div class="visualization-content"></div>';
+            const content = container.querySelector('.visualization-content');
+            
+            // 計算合適的柱子寬度和間距
+            const totalBars = height.length;
+            const containerWidth = container.clientWidth - 40;
+            const minSpacing = 5;
+            const barWidth = Math.floor((containerWidth - (totalBars - 1) * minSpacing) / totalBars);
+            const spacing = Math.floor((containerWidth - barWidth * totalBars) / (totalBars - 1));
+            
+            // 計算高度比例
+            const maxHeight = Math.max(...height);
+            const containerHeight = container.clientHeight - 100;
+            const scale = containerHeight / maxHeight;
+
+            // 更新 visualization-content 的寬度
+            content.style.width = '100%';
+            content.style.minWidth = 'auto';
+
+            height.forEach((h, i) => {
+                // 建立柱子容器
+                const barContainer = document.createElement('div');
+                barContainer.style.position = 'absolute';
+                barContainer.style.left = `${i * (barWidth + spacing)}px`;
+                barContainer.style.width = `${barWidth}px`;
+                barContainer.style.height = '100%';
+
+                // 建立柱子
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${h * scale}px`;
+                bar.style.width = `${barWidth}px`;
+                
+                // 建立柱子高度標籤
+                const heightLabel = document.createElement('div');
+                heightLabel.className = 'bar-height';
+                heightLabel.textContent = h;
+                heightLabel.style.width = `${barWidth}px`;
+
+                // 建立水位
+                const water = document.createElement('div');
+                water.className = 'water';
+                water.style.height = '0px';
+                water.style.width = `${barWidth}px`;
+
+                // 建立指針和指針線
+                const pointerContainer = document.createElement('div');
+                pointerContainer.className = 'pointer';
+                pointerContainer.style.width = `${barWidth}px`;
+                
+                const pointerLine = document.createElement('div');
+                pointerLine.className = 'pointer-line';
+                
+                const pointerText = document.createElement('div');
+                pointerText.className = 'pointer-text';
+                
+                pointerContainer.appendChild(pointerLine);
+                pointerContainer.appendChild(pointerText);
+
+                // 將所有元素添加到容器中
+                barContainer.appendChild(bar);
+                barContainer.appendChild(heightLabel);
+                barContainer.appendChild(water);
+                barContainer.appendChild(pointerContainer);
+                content.appendChild(barContainer);
+            });
+        }
+
+        function createCodeLines() {
+            const codeElement = document.querySelector('code.language-python');
+            const codeText = codeElement.textContent;
+            
+            // 保存 Prism.js 的語法高亮
+            const highlightedCode = Prism.highlight(codeText, Prism.languages.python, 'python');
+            
+            // 分割程式碼行並添加行號
+            const codeLines = highlightedCode.split('\n');
+            const wrappedLines = codeLines.map((line, index) => 
+                `<span class="code-line" data-line="${index + 1}"><span class="line-number">${index + 1}</span>${line}</span>`
+            );
+            
+            codeElement.innerHTML = wrappedLines.join('\n');
+        }
+
+        function highlightCodeLine(lineNumbers) {
+            // 清除所有高亮
+            document.querySelectorAll('.code-line').forEach(line => {
+                line.classList.remove('highlight');
+            });
+
+            // 添加新的高亮
+            lineNumbers.forEach(lineNum => {
+                const line = document.querySelector(`.code-line[data-line="${lineNum}"]`);
+                if (line) {
+                    line.classList.add('highlight');
+                }
+            });
+        }
+
+        function updateVisualization() {
+            const pointers = document.querySelectorAll('.pointer');
+            const waters = document.querySelectorAll('.water');
+            const scale = 80;
+            
+            // 更新指針
+            pointers.forEach(p => {
+                p.className = 'pointer';
+                p.querySelector('.pointer-text').textContent = '';
+            });
+
+            // 設置左指針
+            const leftPointer = pointers[left];
+            leftPointer.className = 'pointer left active';
+            leftPointer.querySelector('.pointer-text').textContent = 'L';
+
+            // 設置右指針
+            const rightPointer = pointers[right];
+            rightPointer.className = 'pointer right active';
+            rightPointer.querySelector('.pointer-text').textContent = 'R';
+
+            // 更新水位動畫
+            waters.forEach((water, i) => {
+                const waterHeight = Math.max(0, Math.min(leftMax, rightMax) - height[i]);
+                water.style.height = `${waterHeight * scale}px`;
+                water.style.opacity = (i > left && i < right) ? '0.6' : '0';
+            });
+
+            // 更新說明文字
+            const explanation = document.getElementById('explanation');
+            if (left >= right) {
+                // 演算法結束
+                explanation.innerHTML = `
+                    <div style="background-color: #4CAF50; color: white; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                        演算法執行完成！總積水量：${result}
+                    </div>
+                    <div style="color: #f44336">Left Pointer：${left}</div>
+                    <div style="color: #2196f3">Right Pointer：${right}</div>
+                    <div>Left Max：${leftMax}，Right Max：${rightMax}</div>
+                `;
+            } else {
+                explanation.innerHTML = `
+                    <div style="color: #f44336">Left Pointer：${left}</div>
+                    <div style="color: #2196f3">Right Pointer：${right}</div>
+                    <div>Left Max：${leftMax}，Right Max：${rightMax}</div>
+                    <div>Current Water：${result}</div>
+                `;
+            }
+
+            // 更新程式碼高亮
+            if (currentStep === 0) {
+                // 初始化階段
+                highlightCodeLine([5]); // 初始化 left, right
+            } else {
+                if (left < right) {
+                    if (leftMax < rightMax) {
+                        // 左指針移動時，依序高亮對應的程式碼行
+                        const lastStep = steps[currentStep - 1];
+                        if (left !== lastStep.left) {
+                            // 剛移動完左指針
+                            highlightCodeLine([11]); // left += 1
+                        } else if (leftMax !== lastStep.leftMax) {
+                            // 剛更新完 leftMax
+                            highlightCodeLine([12]); // leftMax = max(leftMax, height[left])
+                        } else {
+                            // 計算積水量
+                            highlightCodeLine([13]); // result += leftMax - height[left]
+                        }
+                    } else {
+                        // 右指針移動時，依序高亮對應的程式碼行
+                        const lastStep = steps[currentStep - 1];
+                        if (right !== lastStep.right) {
+                            // 剛移動完右指針
+                            highlightCodeLine([15]); // right -= 1
+                        } else if (rightMax !== lastStep.rightMax) {
+                            // 剛更新完 rightMax
+                            highlightCodeLine([16]); // rightMax = max(rightMax, height[right])
+                        } else {
+                            // 計算積水量
+                            highlightCodeLine([17]); // result += rightMax - height[right]
+                        }
+                    }
+                } else {
+                    highlightCodeLine([19]); // return result
+                }
+            }
+        }
+
+        function next() {
+            if (left < right) {
+                let newStep = {
+                    left: left,
+                    right: right,
+                    leftMax: leftMax,
+                    rightMax: rightMax,
+                    result: result
+                };
+
+                if (leftMax < rightMax) {
+                    newStep.left++;
+                    newStep.leftMax = Math.max(leftMax, height[newStep.left]);
+                    newStep.result = result + Math.max(0, newStep.leftMax - height[newStep.left]);
+                } else {
+                    newStep.right--;
+                    newStep.rightMax = Math.max(rightMax, height[newStep.right]);
+                    newStep.result = result + Math.max(0, newStep.rightMax - height[newStep.right]);
+                }
+
+                // 如果不是在最後一步，清除之後的步驟
+                if (currentStep < steps.length - 1) {
+                    steps = steps.slice(0, currentStep + 1);
+                }
+                
+                steps.push(newStep);
+                currentStep++;
+
+                // 更新當前狀態
+                left = newStep.left;
+                right = newStep.right;
+                leftMax = newStep.leftMax;
+                rightMax = newStep.rightMax;
+                result = newStep.result;
+
+                updateVisualization();
+            } else if (currentStep === 0) {
+                // 允許執行最後一步
+                currentStep++;
+                updateVisualization();
+            }
+        }
+
+        function prev() {
+            if (currentStep > 0) {
+                currentStep--;
+                const prevStep = steps[currentStep];
+                
+                // 恢復前一步的狀態
+                left = prevStep.left;
+                right = prevStep.right;
+                leftMax = prevStep.leftMax;
+                rightMax = prevStep.rightMax;
+                result = prevStep.result;
+
+                updateVisualization();
+            }
+        }
+
+        function reset() {
+            // 重置所有狀態
+            steps = [{
+                left: 0,
+                right: height.length - 1,
+                leftMax: height[0],
+                rightMax: height[height.length - 1],
+                result: 0
+            }];
+            currentStep = 0;
+            left = steps[0].left;
+            right = steps[0].right;
+            leftMax = steps[0].leftMax;
+            rightMax = steps[0].rightMax;
+            result = steps[0].result;
+            waterLevels = new Array(height.length).fill(0);
+            createBars();
+            updateVisualization();
+        }
+
+        function updateArray() {
+            const input = document.getElementById('input-array').value;
+            const errorElement = document.getElementById('error-message');
+            
+            // 驗證輸入
+            try {
+                // 分割輸入字串
+                const newHeight = input.split(',')
+                    .map(num => {
+                        const parsed = parseInt(num.trim());
+                        if (isNaN(parsed) || parsed < 0) {
+                            throw new Error('請輸入非負整數，並用逗號分隔');
+                        }
+                        return parsed;
+                    });
+
+                if (newHeight.length < 2) {
+                    throw new Error('請至少輸入兩個數字');
+                }
+
+                // 更新數據
+                height.length = 0;
+                height.push(...newHeight);
+
+                // 重置狀態
+                steps = [{
+                    left: 0,
+                    right: height.length - 1,
+                    leftMax: height[0],
+                    rightMax: height[height.length - 1],
+                    result: 0
+                }];
+                currentStep = 0;
+                left = steps[0].left;
+                right = steps[0].right;
+                leftMax = steps[0].leftMax;
+                rightMax = steps[0].rightMax;
+                result = steps[0].result;
+                waterLevels = new Array(height.length).fill(0);
+
+                // 更新視覺化
+                createBars();
+                updateVisualization();
+                
+                // 清除錯誤訊息
+                errorElement.textContent = '';
+            } catch (error) {
+                // 顯示錯誤訊息
+                errorElement.textContent = error.message;
+            }
+        }
+
+        // 初始化
+        function initialize() {
+            createCodeLines();
+            createBars();
+            updateVisualization();
+        }
+
+        // 在頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', initialize);
+
+        // 添加視窗大小改變時的處理
+        window.addEventListener('resize', () => {
+            createBars();
+            updateVisualization();
+        });
+    </script>
+</body>
+</html> 
