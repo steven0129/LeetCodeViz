@@ -1,0 +1,281 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+}
+
+.code-section {
+    flex: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.code-section pre {
+    margin: 0;
+    padding: 0;
+}
+
+.code-section code {
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    display: block;
+    padding: 10px;
+}
+
+.code-line {
+    font-family: 'Consolas', monospace;
+    white-space: pre;
+    padding: 0 4px;
+    transition: background-color 0.2s;
+}
+
+.code-line-highlight {
+    background-color: #fff3bf;
+    display: block;
+    margin: 0 -4px;
+    padding: 0 4px;
+}
+
+.visualization-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#heightInput {
+    width: 250px;
+    min-width: 200px;
+    flex: 1;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#heightInput:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #1557b0;
+}
+
+.visualization {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 16px;
+}
+
+#currentArea, #maxArea {
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+.step-description {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.code-section span {
+    display: inline;
+}
+
+.python-code {
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 0.7;
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin: 0;
+}
+
+/* Python 語法高亮 */
+.keyword {
+    color: #0033B3;
+}
+
+.function-name {
+    color: #7A7A43;
+}
+
+.class-name {
+    color: #00627A;
+}
+
+.self {
+    color: #871094;
+}
+
+.number {
+    color: #1750EB;
+}
+
+.type {
+    color: #00627A;
+}
+
+.comment {
+    color: #8C8C8C;
+    font-style: italic;
+}
+
+/* 在平板尺寸以下時的樣式 */
+@media screen and (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .content {
+        flex-direction: column;
+    }
+
+    .code-section, .visualization-section {
+        width: 100%;
+    }
+
+    .visualization {
+        height: 300px;
+    }
+}
+
+/* 在手機尺寸時的樣式 */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .code-section {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .python-code {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .visualization {
+        height: 250px;
+    }
+
+    .input-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #heightInput {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .step-description {
+        font-size: 12px;
+    }
+}
+
+/* 在特小螢幕時的樣式 */
+@media screen and (max-width: 480px) {
+    .visualization {
+        height: 200px;
+    }
+
+    .code-section {
+        font-size: 11px;
+    }
+
+    .python-code {
+        font-size: 11px;
+        padding: 8px;
+    }
+} 
