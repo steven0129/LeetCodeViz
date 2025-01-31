@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>LeetCode 11 - Container With Most Water</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LeetCode 11 - Container With Most Water</h1>
+        <div class="content">
+            <div class="code-section">
+                <pre class="python-code">
+<div class="code-line" data-line-number="1"><span class="keyword">class</span> <span class="class-name">Solution</span>:</div>
+<div class="code-line" data-line-number="2">    <span class="keyword">def</span> <span class="function-name">maxArea</span>(<span class="self">self</span>, height: List[<span class="type">int</span>]) -> <span class="type">int</span>:</div>
+<div class="code-line" data-line-number="3">        ans = <span class="number">0</span></div>
+<div class="code-line" data-line-number="4">        left = <span class="number">0</span></div>
+<div class="code-line" data-line-number="5">        right = len(height) - <span class="number">1</span></div>
+<div class="code-line" data-line-number="6">        highest = max(height)</div>
+
+<div class="code-line" data-line-number="8">        <span class="keyword">while</span> left < right:</div>
+<div class="code-line" data-line-number="9">            area = min(height[right], height[left]) * (right - left)</div>
+<div class="code-line" data-line-number="10">            ans = max(ans, area)</div>
+
+<div class="code-line" data-line-number="12">            <span class="keyword">if</span> highest * (right - left) < ans:  <span class="comment"># 效率提升的關鍵</span></div>
+<div class="code-line" data-line-number="13">                <span class="keyword">break</span></div>
+
+<div class="code-line" data-line-number="15">            <span class="keyword">if</span> height[right] > height[left]:</div>
+<div class="code-line" data-line-number="16">                left += <span class="number">1</span></div>
+<div class="code-line" data-line-number="17">            <span class="keyword">else</span>:</div>
+<div class="code-line" data-line-number="18">                right -= <span class="number">1</span></div>
+
+<div class="code-line" data-line-number="20">        <span class="keyword">return</span> ans</div></pre>
+            </div>
+            <div class="visualization-section">
+                <div class="input-section">
+                    <label for="heightInput">輸入高度 (用逗號分隔):</label>
+                    <input type="text" id="heightInput" placeholder="例如: 1,8,6,2,5,4,8,3,7">
+                    <button id="submitBtn">確認</button>
+                </div>
+                <div class="controls">
+                    <button id="prevBtn">上一步</button>
+                    <button id="nextBtn">下一步</button>
+                    <button id="resetBtn">重置</button>
+                </div>
+                <div class="visualization">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="info">
+                    <p>當前面積: <span id="currentArea">0</span></p>
+                    <p>最大面積: <span id="maxArea">0</span></p>
+                </div>
+                <div class="step-description">
+                    <p>當前步驟: <span id="stepDescription">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
