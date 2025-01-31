@@ -572,44 +572,6 @@
                     <div>Current Water：${result}</div>
                 `;
             }
-
-            // 更新程式碼高亮
-            if (currentStep === 0) {
-                // 初始化階段
-                highlightCodeLine([5]); // 初始化 left, right
-            } else {
-                if (left < right) {
-                    if (leftMax < rightMax) {
-                        // 左指針移動時，依序高亮對應的程式碼行
-                        const lastStep = steps[currentStep - 1];
-                        if (left !== lastStep.left) {
-                            // 剛移動完左指針
-                            highlightCodeLine([11]); // left += 1
-                        } else if (leftMax !== lastStep.leftMax) {
-                            // 剛更新完 leftMax
-                            highlightCodeLine([12]); // leftMax = max(leftMax, height[left])
-                        } else {
-                            // 計算積水量
-                            highlightCodeLine([13]); // result += leftMax - height[left]
-                        }
-                    } else {
-                        // 右指針移動時，依序高亮對應的程式碼行
-                        const lastStep = steps[currentStep - 1];
-                        if (right !== lastStep.right) {
-                            // 剛移動完右指針
-                            highlightCodeLine([15]); // right -= 1
-                        } else if (rightMax !== lastStep.rightMax) {
-                            // 剛更新完 rightMax
-                            highlightCodeLine([16]); // rightMax = max(rightMax, height[right])
-                        } else {
-                            // 計算積水量
-                            highlightCodeLine([17]); // result += rightMax - height[right]
-                        }
-                    }
-                } else {
-                    highlightCodeLine([19]); // return result
-                }
-            }
         }
 
         function next() {
