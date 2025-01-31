@@ -26,12 +26,24 @@ h1 {
     flex-direction: row;
 }
 
-.code-section {
+.left-section {
     flex: 1;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.code-section {
     background-color: #f8f9fa;
     border-radius: 8px;
     overflow-x: auto;
+    padding: 20px;
+}
+
+.code-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
 }
 
 .code-section pre {
@@ -133,6 +145,7 @@ canvas {
     justify-content: center;
     gap: 20px;
     font-size: 16px;
+    margin-bottom: 10px;
 }
 
 #currentArea, #maxArea {
@@ -141,10 +154,11 @@ canvas {
 }
 
 .step-description {
-    margin-top: 10px;
     text-align: center;
     font-size: 14px;
     color: #666;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
 }
 
 .code-section span {
@@ -201,8 +215,12 @@ canvas {
         flex-direction: column;
     }
 
-    .code-section, .visualization-section {
+    .left-section, .visualization-section {
         width: 100%;
+    }
+
+    .code-info {
+        margin-bottom: 20px;
     }
 
     .visualization {

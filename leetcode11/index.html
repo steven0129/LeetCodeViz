@@ -13,8 +13,9 @@
     <div class="container">
         <h1>LeetCode 11 - Container With Most Water</h1>
         <div class="content">
-            <div class="code-section">
-                <pre class="python-code">
+            <div class="left-section">
+                <div class="code-section">
+                    <pre class="python-code">
 <div class="code-line" data-line-number="1"><span class="keyword">class</span> <span class="class-name">Solution</span>:</div>
 <div class="code-line" data-line-number="2">    <span class="keyword">def</span> <span class="function-name">maxArea</span>(<span class="self">self</span>, height: List[<span class="type">int</span>]) -> <span class="type">int</span>:</div>
 <div class="code-line" data-line-number="3">        ans = <span class="number">0</span></div>
@@ -35,6 +36,16 @@
 <div class="code-line" data-line-number="18">                right -= <span class="number">1</span></div>
 
 <div class="code-line" data-line-number="20">        <span class="keyword">return</span> ans</div></pre>
+                </div>
+                <div class="code-info">
+                    <div class="info">
+                        <p>當前面積: <span id="currentArea">0</span></p>
+                        <p>最大面積: <span id="maxArea">0</span></p>
+                    </div>
+                    <div class="step-description">
+                        <p>當前步驟: <span id="stepDescription">-</span></p>
+                    </div>
+                </div>
             </div>
             <div class="visualization-section">
                 <div class="input-section">
@@ -49,13 +60,6 @@
                 </div>
                 <div class="visualization">
                     <canvas id="canvas"></canvas>
-                </div>
-                <div class="info">
-                    <p>當前面積: <span id="currentArea">0</span></p>
-                    <p>最大面積: <span id="maxArea">0</span></p>
-                </div>
-                <div class="step-description">
-                    <p>當前步驟: <span id="stepDescription">-</span></p>
                 </div>
             </div>
         </div>
